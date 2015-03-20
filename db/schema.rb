@@ -11,7 +11,37 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150320160018) do
+ActiveRecord::Schema.define(version: 20150320205357) do
+
+  create_table "appointments", force: true do |t|
+    t.string   "note"
+    t.integer  "client_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "appointments", ["client_id"], name: "index_appointments_on_client_id"
+
+  create_table "clients", force: true do |t|
+    t.string   "first"
+    t.string   "last"
+    t.integer  "user_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "clients", ["user_id"], name: "index_clients_on_user_id"
+
+  create_table "locations", force: true do |t|
+    t.float    "latitude"
+    t.float    "longitude"
+    t.string   "address"
+    t.integer  "appointment_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "locations", ["appointment_id"], name: "index_locations_on_appointment_id"
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -27,6 +57,8 @@ ActiveRecord::Schema.define(version: 20150320160018) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "authentication_token"
+    t.string   "first"
+    t.string   "last"
   end
 
   add_index "users", ["authentication_token"], name: "index_users_on_authentication_token"

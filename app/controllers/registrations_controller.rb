@@ -6,14 +6,13 @@ class RegistrationsController < Devise::RegistrationsController
 
   def create
     build_resource
-    resource = User.new(params[:user])
+    resource = User.new(user_params)
     if resource.save
       sign_in resource
       render :status => 200,
            :json => { :success => true,
                       :info => "Registered",
-                      :data => { :user => resource,
-                                 :auth_token => current_user.authentication_token } }
+                      :data => { :user => resource } }
     else
       render :status => :unprocessable_entity,
              :json => { :success => false,
@@ -25,7 +24,7 @@ class RegistrationsController < Devise::RegistrationsController
   private 
 
   def user_params
-    params.require(:user).permit(:email, :password)
+    params.require(:user).permit(:email, :password, :first, :last)
   end
 
 end

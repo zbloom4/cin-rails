@@ -13,6 +13,10 @@ gem 'devise'
 
 gem 'simple_token_authentication', '~> 1.0'
 
+gem 'rabl'
+
+gem 'oj'
+
 # To use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
 
