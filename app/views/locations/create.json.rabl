@@ -6,7 +6,7 @@ child :data do
     attributes :id, :user_id, :first, :last, :created_at
     child @appointment do
       attributes :id, :comment, :created_at
-      child @appointment.locations.each do
+      child @location do
         attributes :id, :longitude, :latitude
       end  
     end

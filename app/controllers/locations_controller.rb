@@ -1,4 +1,4 @@
-class Api::V1::LocationsController < ApplicationController
+class LocationsController < ApplicationController
   skip_before_filter :verify_authenticity_token,
                     :if => Proc.new { |c| c.request.format == 'application/json' }
   
@@ -6,7 +6,7 @@ class Api::V1::LocationsController < ApplicationController
 
   def index
     @client = Client.find params[:client_id]
-    @appointment = @client.appointments.find [:app_id]
+    @appointment = @client.appointments.find params[:app_id]
     @locations = @appointment.locations
   end
 
@@ -16,33 +16,14 @@ class Api::V1::LocationsController < ApplicationController
     @location = @appointment.locations.build(location_params)
 
     
-    if @appointment.save
-      @appointment
+    if @location.save
+      @location
     else
       render :status => :unprocessable_entity,
              :json => { :success => false,
-                        :info => @appointment.errors.full_messages,
+                        :info => @location.errors.full_messages,
                         :data => {} }
     end
-  end
-
-  def show
-    @client = Client.find(params[:id])
-  rescue ActiveRecord::RecordNotFound
-    render :status => 404,
-           :json => { :success => false,
-                      :info => 'Not Found',
-                      :data => {} }
-  end
-
-  def destroy
-    @client = current_user.clients.find(params[:id])
-    @client.destroy
-  rescue ActiveRecord::RecordNotFound
-    render :status => 404,
-           :json => { :success => false,
-                      :info => 'Not Found',
-                      :data => {} }
   end
 
   private

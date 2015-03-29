@@ -6,7 +6,7 @@ Rails.application.routes.draw do
     post 'sessions' => 'sessions#create', :as => 'login'
     delete 'sessions' => 'sessions#destroy', :as => 'logout'
   end
-
+  
   get 'clients' => 'clients#index', :as => 'clients'
   post 'clients' => 'clients#create'
   delete 'clients/:id/destroy' => 'clients#destroy',  :as => 'destroy_client'
@@ -15,7 +15,8 @@ Rails.application.routes.draw do
   get 'clients/:client_id/appointments/:id/show' => 'appointments#show'
   get 'clients/:client_id/appointments' => 'appointments#index', :as => 'appointments'
   post 'clients/:client_id/appointments/:app_id/locations/create' => 'locations#create'
-
+  get 'clients/:client_id/appointments/:app_id/locations' => 'locations#index', :as => 'locations'
+  post 'clients/:client_id/appointments/:id/update' => 'appointments#update'
 
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".

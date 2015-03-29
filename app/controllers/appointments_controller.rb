@@ -1,4 +1,4 @@
-class Api::V1::AppointmentsController < ApplicationController
+class AppointmentsController < ApplicationController
   skip_before_filter :verify_authenticity_token,
                     :if => Proc.new { |c| c.request.format == 'application/json' }
 
@@ -12,6 +12,7 @@ class Api::V1::AppointmentsController < ApplicationController
   def show
     @client = Client.find params[:client_id]
     @appointment = @client.appointments.find params[:id]
+    @locations = @appointment.locations
   end
 
   def edit
@@ -27,26 +28,31 @@ class Api::V1::AppointmentsController < ApplicationController
     else
       render :status => :unprocessable_entity,
              :json => { :success => false,
-                        :info => @client.errors.full_messages,
+                        :info => @appointment.errors.full_messages,
                         :data => {} }
     end
   end
 
   def update
+    @client = Client.find params[:client_id]
+    @appointment = @client.appointments.find params[:id]
+    @locations = @appointment.locations
     if @appointment.update(appointment_params)
-    	redirect_to client_url(@appointment.client) , notice: 'Appointment was successfullly updated'
+    	@appointment
     else
-    	render :edit
+      render :status => :unprocessable_entity,
+             :json => { :success => false,
+                        :info => @appointment.errors.full_messages,
+                        :data => {} }
     end
   end
     
   def destroy 
     @appointment.destroy
-    redirect_to client_url(@appointment.client) , notice: 'Appointment was successfully destroyed'
   end
 
   private
     def appointment_params
-      params.require(:appointment).permit(:comment, :client_id)
+      params.require(:appointment).permit(:note, :client_id)
     end
 end
